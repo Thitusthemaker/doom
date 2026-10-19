@@ -1,0 +1,25 @@
+gameClass
+    update()
+        getPlayerInput()
+        processPlayerInput()
+        processEnemies() 
+        processEntites() bullets etc
+        render()
+    paint()
+        paintRendered()
+
+entitesClass()
+    handleMovement
+    handleCollisonDetection
+    handleDamage
+
+enemiesClass()
+    handlethinking
+    handleMovement/CollisonDetection
+    handleShooting
+mapClass()
+    handles 
+        editing
+        loading
+        creating
+        collectables???

@@ -1,0 +1,21 @@
+if @plInp["right"] || @plInp["left"]
+      @dx += @plInp["right"] ? @acceleration : 0
+      @dx -= @plInp["left"] ? @acceleration : 0
+
+      @dx = @maxSpeed if @dx >= @maxSpeed 
+      @dx = -@maxSpeed if @dx <= -@maxSpeed 
+        
+    else
+      @dx = (-0.2 < @dx) && (@dx < 0.2) ? @retard * @dx : 0
+    end
+
+    if @plInp["up"] || @plInp["down"] 
+      @dy += @plInp["up"] ? @acceleration : 0
+      @dy -= @plInp["down"] ? @acceleration : 0
+
+      @dy = @maxSpeed if @dy >= @maxSpeed 
+      @dy = -@maxSpeed if @dy <= -@maxSpeed 
+        
+    else
+      @dy = (-0.2 < @dy) && (@dy < 0.2) ? @retard * @dy : 0
+    end

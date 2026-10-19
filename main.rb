@@ -1,12 +1,25 @@
 require 'gosu'
+# require_relative 'gameSettings'   
+require_relative 'player'   
 
 
 class Game < Gosu::Window
-  def initialize(gameWindow)
-    super(gameWindow[0],gameWindow[1])
+  def initialize(height,width)
+    super(height,width)
+
+    @player = Player.new
   end
+  def update
+    @player.getPlayerInput()
+    @player.processPlayerInput()
+    @player.movePlayer()
+
+  end
+  def draw
+  end
+
+  
+  
 end
 
-q = Game.new([640,720])
-
-q.show
+q = Game.new(1920,1080).show
