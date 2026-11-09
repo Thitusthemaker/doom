@@ -1,3 +1,6 @@
+
+//Here lays old code that i saved just in case, but will most likely never be used again. :(
+
 if @plInp["right"] || @plInp["left"]
       @dx += @plInp["right"] ? @acceleration : 0
       @dx -= @plInp["left"] ? @acceleration : 0
@@ -19,3 +22,16 @@ if @plInp["right"] || @plInp["left"]
     else
       @dy = (-0.2 < @dy) && (@dy < 0.2) ? @retard * @dy : 0
     end
+
+     def makeit3d(distances)
+    dx = (@width/@rays).floor()
+    x = 0
+   
+      if distances[i] != nil
+      dist = distances[i][0]
+      # p dist
+      Gosu.draw_rect(x,(-@height/dist),dx,(@height/dist), Gosu::Color::GREEN, 0)
+      x += dx
+      end
+    end
+    # distances.each {|dist| }

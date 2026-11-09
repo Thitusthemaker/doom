@@ -1,4 +1,5 @@
 class Player
+  attr_reader :tx, :ty, :playerAngle
   def initialize()
     @plInp = {}
 
@@ -26,10 +27,10 @@ class Player
   end
   def processPlayerInput()
     if @plInp["turn_l"]
-      @playerAngle = (@playerAngle + (5 * (Math::PI/180))) % (Math::PI * 2)
+      @playerAngle = (@playerAngle - (5 * (Math::PI/180))) % (Math::PI * 2)
     end
     if @plInp["turn_r"]
-      @playerAngle = (@playerAngle - (5 * (Math::PI/180))) % (Math::PI * 2)
+      @playerAngle = (@playerAngle + (5 * (Math::PI/180))) % (Math::PI * 2)
     end
     if @plInp["right"] || @plInp["left"]
       @dx += @plInp["right"] ? @acceleration : 0
@@ -55,22 +56,9 @@ class Player
     
   end
   def movePlayer()
-    r = (@dy**2 + @dx**2)**0.5
 
-    v = @dy != 0 ? Math.tan(@dx/@dy) : 0 
+    @ty += @dx * Math.cos(@playerAngle) + @dy * Math.sin(@playerAngle)
+    @tx += @dx * -Math.sin(@playerAngle) + @dy * Math.cos(@playerAngle)
 
-    vx = r * Math.cos(v + @playerAngle)
-    vy = r * Math.sin(v + @playerAngle)
-    # theta = Math.acos(@dx/hypotenusa)
-    # alpha = Math.asin(@dy/hypotenusa)
-    # p theta
-    # p alpha
-    # p @movementRadius
-
-    
-    
-    # vx = hypotenusa * Math.cos(theta - @playerAngle)
-    # vy = hypotenusa * Math.sin(alpha - @playerAngle)
-    p "#{vx} #{vy} : #{@dx} #{@dy}"
   end
 end
