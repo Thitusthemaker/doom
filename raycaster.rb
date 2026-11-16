@@ -1,19 +1,25 @@
 require_relative 'map'
 class Ray 
-  def initialize(x,y,angle,map)
+  attr_reader :maxDistance
+  def initialize(x,y,angle,map, maxDist)
     @x = x
     @y = y
     @angle = angle
+    @maxDistance = maxDist
     @distance = 0
-    @maxDistance = 1000
     @map = map
+    @jump = 3
   end
   def cast
     while @map.collision?(@x,@y) == false && @distance <= @maxDistance
-      @distance += 1
+      @distance += @jump
       @y += Math.sin(@angle)
       @x += Math.cos(@angle)     
     end
-    return [@distance,@x, @y]
+    if @distance < @maxDistance
+      return [@distance,@x, @y]
+    else
+      return [@maxDistance+1,0,0]
+    end
   end
 end

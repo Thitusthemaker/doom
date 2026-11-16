@@ -2,7 +2,7 @@
 class Map
   attr_reader :map, :blocksize
   def initialize()
-    @blocksize = 100
+    @blocksize = 50
     @map = [
       [0,0,0,1,0],
       [0,0,0,1,0],
@@ -12,13 +12,24 @@ class Map
     ]
   end
   def collision?(x,y)
+    begin
     blockX = (x/@blocksize).floor()
     blockY = (y/@blocksize).floor()
-    # p "#{blockX} , #{blockY}"
-    if blockX < @map[0].length && blockY < @map.length
-      return @map[blockY][blockX] == 1 ? true : false
+    
+      if blockX < (@map[0].length) && blockX >= 0 && blockY < @map.length && blockY >= 0
+        return @map[blockY][blockX] == 1 ? true : false
+      end
+    rescue StandardError => e
+      p e
+      p "#{x},#{y}"
+      p "#{blockX},#{blockY}"
+      p @map[0].length
+      p blockX < (@map[0].length)
+      p @blocksize
+      exit!
+
     end
-      false
+    false
   end
   
   def paint
