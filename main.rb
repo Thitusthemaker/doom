@@ -4,6 +4,10 @@ require 'gosu_more_drawables'
 require_relative 'player'   
 require_relative 'map'
 require_relative 'raycaster'
+# require_relative 'threading'
+require 'thread'
+require_relative 'Cores'
+
 
 class Game < Gosu::Window
   def initialize(width,height)
@@ -12,7 +16,8 @@ class Game < Gosu::Window
     @width = width
     @player = Player.new
     @map = Map.new
-    @rays = 360
+    @workers = RayCores.new(8)
+    @xRays = 360
     @fov = Math::PI/2
     @casts = []
     @rayMaxDist = 2000
@@ -22,23 +27,21 @@ class Game < Gosu::Window
     plx = @player.tx
     ply = @player.ty
     pla = @player.playerAngle
-    
-    @casts = []
-    for i in 0...@rays
-      ray =  Ray.new(plx,ply,(pla + ((i * @fov)/@rays) - (@fov/2)),@map, @rayMaxDist)
-      @casts << ray.cast
-    end
+
+    @workers.work(plx,ply,pla,@fov,@xRays,@map,@maxDist)
+
   end
+
   def update
     @player.getPlayerInput()
     @player.processPlayerInput()
     @player.movePlayer()
     raycast()
-
+    self.caption = "#{Gosu.fps}"
   end
   
   def draw
-    render(@casts)
+    render(@workers.grab)
 
     if @DEBUG == 1
       plx = @player.tx
@@ -53,33 +56,37 @@ class Game < Gosu::Window
     end
   end
 
-  def render(points)
-    distances = []
-    points.each {|point| distances << point[0]}    
+  def render(rays)
+    # rays = []
+    # points.each {|point| distances << point[0]}    
     
-    dx = (@width /@rays.to_f).ceil
-    
-    ray = 0
+    dx = (@width /@xRays.to_f).ceil
+  
     x = 0
+    ray = 0
+    while ray < @xRays
+      r = rays[ray][1]
+      # id = rays[ray].id()
+      # x = dx*id
+      # a = rays[ray].angle()
+      # p a
+      # r = distances[ray]
+      # z = r* Math.cos(a)
 
-    
-    while x < @width
-      distance = distances[ray]
-      if (distance != 0) && (distance <= 2000)
-        y1 = (@height/2) - 99999/distance
-        y2 = (@height/2) - -99999/distance
+      if (r != 0) && (r <= 2000)
+        y1 = (@height/2) - 99999/r
+        y2 = (@height/2) - -99999/r
         dy = y2-y1
-        fade = (500/distance.to_f) 
+        fade = (500/r.to_f).abs 
         fade = fade >= 1 ? 1 : fade
         
-        draw_line(x,y1,Gosu::Color::WHITE,x,y2,Gosu::Color::BLACK,1)
+        draw_line(x,y1,Gosu::Color::BLACK,x,y2,Gosu::Color::BLACK,1)
         draw_rect(x,y1,dx,dy,Gosu::Color.rgb(100*fade, 80*fade, 80*fade),1)
       end
       ray += 1
       x += dx
     end
   end
-  
 end
 
 q = Game.new(1920,1080).show
