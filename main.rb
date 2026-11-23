@@ -17,10 +17,10 @@ class Game < Gosu::Window
     @player = Player.new
     @map = Map.new
     @workers = RayCores.new(8) #8 cores for rays, we only have 10 cores total :(
-    @xRays = 480
+    @xRays = 570
     @fov = Math::PI/2
     @casts = []
-    @rayMaxDist = 2500
+    @rayMaxDist = 3000
     @DEBUG = 0
   end
   def raycast()
@@ -73,7 +73,7 @@ class Game < Gosu::Window
       # r = distances[ray]
       # z = r* Math.cos(a)
 
-      if (r != 0) && (r <= 2000)
+      if (r != 0) && (r <= @rayMaxDist)
         y1 = (@height/2) - 99999/r
         y2 = (@height/2) - -99999/r
         dy = y2-y1
