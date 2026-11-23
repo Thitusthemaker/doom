@@ -16,11 +16,11 @@ class Game < Gosu::Window
     @width = width
     @player = Player.new
     @map = Map.new
-    @workers = RayCores.new(8)
-    @xRays = 360
+    @workers = RayCores.new(8) #8 cores for rays, we only have 10 cores total :(
+    @xRays = 480
     @fov = Math::PI/2
     @casts = []
-    @rayMaxDist = 2000
+    @rayMaxDist = 2500
     @DEBUG = 0
   end
   def raycast()
@@ -28,7 +28,7 @@ class Game < Gosu::Window
     ply = @player.ty
     pla = @player.playerAngle
 
-    @workers.work(plx,ply,pla,@fov,@xRays,@map,@maxDist)
+    @workers.work(plx,ply,pla,@fov,@xRays,@map,@rayMaxDist)
 
   end
 
@@ -49,7 +49,7 @@ class Game < Gosu::Window
       pla = @player.playerAngle
       blocks = @map.paint
 
-      blocks.each { |block| Gosu.draw_rect(block[1],block[0], @map.blocksize, @map.blocksize, Gosu::Color::BLUE, 3)}
+      blocks.each {|block| Gosu.draw_rect(block[1],block[0], @map.blocksize, @map.blocksize, Gosu::Color::BLUE, 3)}
       @casts.each {|dist| draw_line(plx,ply, Gosu::Color::GREEN, dist[1],dist[2], Gosu::Color::GREEN,3)}
       
       Gosu.draw_circle(plx, ply, 15, 36, Gosu::Color::RED, 3)
